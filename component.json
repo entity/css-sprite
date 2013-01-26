@@ -1,0 +1,16 @@
+{
+  "name": "css-sprite",
+  "version": "0.0.1",
+  "description": "css sprite component/system",
+  "keywords": ["css","sprite","component","system"],
+  "author": "stagas",
+  "license": "MIT",
+  "development": {
+    "entity/vector": "*",
+    "entity/rect": "*",
+    "entity/manager": "*",
+    "entity/loop": "*",
+    "entity/dom": "*"
+  },
+  "scripts": ["index.js"]
+}
