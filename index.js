@@ -1,6 +1,4 @@
 
-var v = require('vector')
-
 /**
  * css-sprite
  */
