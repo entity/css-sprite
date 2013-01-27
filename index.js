@@ -12,22 +12,19 @@ module.exports = function (url, map) {
   , face: [String, 'stand']
   , frame: [Number, 0]
   , duration: [Number, 1]
+  , standing: [Boolean, false]
   }
 
   sprite.init = function (e) {
     e.el.style.backgroundImage = 'url('+e.sprite.url+')'
   }
 
-  sprite.render = function (e) {
+  sprite.update = function (e) {
+    if (e.sprite.standing) return
+    if (!(e.sprite.face in e.sprite.map)) return
+
     var current = e.sprite.map[e.sprite.face][e.sprite.frame]
-    e.setSpriteBgPos(
-      [ current[3]
-      , 'px '
-      , - (current[0] * e.mesh.size.height
-        + current[2])
-      , 'px'
-      ].join('')
-    )
+
     if (e.sprite.duration <= 1) {
       e.sprite.frame++
       if (e.sprite.frame >= e.sprite.map[e.sprite.face].length) {
@@ -40,12 +37,36 @@ module.exports = function (url, map) {
     }
   }
 
+  sprite.render = function (e, a, force) {
+    if (!force && e.sprite.standing) return
+    if (!(e.sprite.face in e.sprite.map)) return
+
+    var current = e.sprite.map[e.sprite.face][e.sprite.frame]
+
+    e.setSpriteBgPos(
+      [ current[3]
+      , 'px '
+      , - (current[0] * e.mesh.size.height
+        + current[2])
+      , 'px'
+      ].join('')
+    )
+  }
+
   // methods
   sprite.setSpriteBgPos = function (newpos) {
     this.el.style.backgroundPosition = newpos
   }
 
   sprite.setSpriteFace = function (face) {
+    this.sprite.standing = false
+    if (!(face in this.sprite.map)) {
+      this.sprite.standing = true
+      this.sprite.duration = 1
+      this.sprite.frame = 0
+      sprite.render(this, 1, true)
+      return
+    }
     this.sprite.face = face
   }
 
